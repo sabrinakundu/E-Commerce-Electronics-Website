@@ -268,7 +268,8 @@ createOrder: function(data, actions) {
 onApprove: function(data, actions) {
     return actions.order.capture().then(function(details) {
         alert('Transaction completed by ' + details.payer.name.given_name + '!');
-
+        const ui = new UI();
+        ui.clearCart();
         //Call server to save the transaction
         return fetch('/paypal-transaction-complete', {
           method: 'post',
