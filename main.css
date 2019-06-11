@@ -1,6 +1,7 @@
 /* import font awesome Lato font*/
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700");
 
+/* Initialize generic CSS variables that will be used in other places in the file. */
 :root {
     --primaryColor: #fec141;
     --mainWhite: #fff;
@@ -10,19 +11,21 @@
     --mainTransition: all 0.3s linear;
 }
 
+/* No margin and padding of page and add border around page. */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Set text in body element to mainBlack and background to mainWhite. Set font to Lato or sans-serif */
 body {
     color: var(--mainBlack);
     background: var(--mainWhite);
     font-family: "Lato", sans-serif;
 }
 
-/* ---------- Navbar ---------- */
+/* Build sticky navigation bar with no top margin and with all text/images centered. */
 .navbar {
     position: sticky;
     top: 0;
@@ -34,6 +37,7 @@ body {
     z-index: 1;
 }
 
+/* Set width of div to 100% and max width to general size of laptop screen. Align text/images to center with equal space between each other. Increase right and left padding. */
 .navbar-center {
     width: 100%;
     max-width: 1170px;
@@ -44,15 +48,18 @@ body {
     padding: 0 1.5rem;
 }
 
+/* Set size of menu icon. */
 .nav-icon {
     font-size: 1.5rem;
 }
 
+/* Set cursor and position on cart button. */
 .cart-btn {
     position: relative;
     cursor: pointer;
 }
 
+/* Style cart items div to a small orange bordered square. */
 .cart-items {
     position: absolute;
     top: -8px;
@@ -63,7 +70,7 @@ body {
     color: var(--mainWhite);
 }
 
-/* ---------- Banner ---------- */
+/* Center the banner under navigation bar, add background image, and align text/images to center. */
 .hero {
     min-height: calc(100vh - 60px);
     background: url("./images/banner10.jpeg") center/cover no-repeat;
@@ -71,18 +78,24 @@ body {
     align-items: center;
     justify-content: center;
 }
+
+/* Center text and set padding around div. */
 .banner {
     text-align: center;
     background: rgba(255, 255, 255, 0.8);
     display: inline-block;
     padding:2rem;
 }
+
+/* Style banner title 'New Arrivals' */
 .banner-title {
     font-size: 3.4rem;
     text-transform: uppercase;
     letter-spacing: var(--mainSpacing);
     margin-bottom: 3rem;
 }
+
+/* Style banner button with orange background and transition effects. Style text, add padding, and set cursor. */
 .banner-btn {
     padding: 1rem 3rem;
     text-transform: uppercase;
@@ -94,15 +107,19 @@ body {
     transition: var(--mainTransition);
     cursor: pointer;
 }
+
+/* Set hover effect on banner 'Shop Now' button. */
 .banner-btn:hover{
     background: transparent;
     color: var(--primaryColor);
 }
 
-/* ---------- Items ---------- */
+/* Set top and bottom padding of products section. */
 .products {
     padding: 4rem 0;
 }
+
+/* Style 'our products' section title. */
 .section-title h2 {
     text-align: center;
     font-size: 2.5rem;
@@ -110,6 +127,8 @@ body {
     text-transform: capitalize;
     letter-spacing: var(--mainSpacing);
 }
+
+/* Create grid in div with equal spacing between each item. Center the div. */
 .products-center {
     width: 90vw;
     margin: 0 auto;
@@ -119,10 +138,14 @@ body {
     grid-column-gap: 1.5rem;
     grid-row-gap: 2rem;
 }
+
+/* Style product image div. */
 .img-container {
     position: relative;
     overflow: hidden;
 }
+
+/* Style 'Add To Cart' button with orange background, top margin, text styles, transitions, border, and padding. */
 .bag-btn {
     position: absolute;
     top: 70%;
@@ -137,24 +160,36 @@ body {
     transform: translateX(101%);
     cursor: pointer;
 }
+
+/* Create hover effect of text color change in 'Add To Cart' button. */
 .bag-btn:hover {
     color: var(--mainWhite);
 }
+
+/* Set right margin on cart icon in 'Add To Cart' button. */
 .fa-shopping-cart {
     margin-right: 0.5rem;
 }
+
+/* Set hover effect on 'Add To Cart' button to move out of the .img-container div when user stops hovering cursor over button. */
 .img-container:hover .bag-btn {
     transform: translateX(0);
 }
+
+/* Style product image. */
 .product-img {
     display: block;
     width: 100%;
     min-height: 12rem;
     transition: var(--mainTransition);
 }
+
+/* Set opacity of product image to 0.5 when user hovers over it. */
 .img-container:hover .product-img {
     opacity: 0.5;
 }
+
+/* Style product title. */
 .product h3 {
     text-transform: capitalize;
     font-size: 1.1rem;
@@ -162,6 +197,8 @@ body {
     letter-spacing: var(--mainSpacing);
     text-align: center;
 }
+
+/* Style product price. */
 .product h4 {
     margin-top: 0.7rem;
     letter-spacing: var(--mainSpacing);
@@ -169,7 +206,7 @@ body {
     text-align: center;
 }
 
-/* ---------- Cart ---------- */
+/* Set position of cart-overlay div to fixed. Set margins, width, height, brown background color, linear transition, and visibility to hidden. */
 .cart-overlay {
     position: fixed;
     top: 0;
@@ -182,6 +219,7 @@ body {
     visibility: hidden;
 }
 
+/* Set cart div position, margins, width, height, overflow, white background, padding, transition, and transformation. */
 .cart {
     position: fixed;
     top: 0;
@@ -196,14 +234,17 @@ body {
     transform: translateX(100%);
 }
 
+/* Hide cart when page loads. */
 .showCart {
     transform: translateX(0);
 }
 
+/* Hide transparent background color when page loads. In other words, don't add this class to .cart-overlay div when page loads. */
 .transparentBcg {
     visibility: visible;
 }
 
+/* Set max width and min width of .cart div. */
 @media screen and (min-width: 768px) {
     .cart {
         width: 30vw;
@@ -211,11 +252,13 @@ body {
     }
 }
 
+/* Set size of 'X' button in cart div. */
 .close-cart {
     font-size: 1.7rem;
     cursor: pointer;
 }
 
+/* Style 'Your Cart' title in cart div. */
 .cart h2 {
     text-transform: capitalize;
     text-align: center;
@@ -223,7 +266,7 @@ body {
     margin-bottom: 2rem;
 }
 
-/* ---------- Cart Item ---------- */
+/* Create grid in div and align text/images to center. */
 .cart-item {
     display: grid;
     align-items: center;
@@ -232,43 +275,50 @@ body {
     margin: 1.5rem 0;
 }
 
+/* Set width and height of cart item image. */
 .cart-item img {
     width: 75px;
     height: 75px;
 }
 
+/* Style cart item title. */
 .cart-item h4 {
     font-size: 0.85rem;
     text-transform: capitalize;
     letter-spacing: var(--mainSpacing);
 }
 
+/* Style cart item price. */
 .cart-item h5 {
     margin: 0.5rem 0;
     letter-spacing: var(--mainSpacing);
 }
 
+/* Align item amount number to center. */
 .item-amount {
     text-align: center;
 }
 
+/* Style remove text in cart item to grey color and change cursor to pointer when hovering over it. */
 .remove-item {
     color: grey;
     cursor: pointer;
 }
 
+/* Style up and down arrows in cart item with orange fill and change cursor when hovering over it. */
 .fa-chevron-up, .fa-chevron-down {
     color: var(--primaryColor);
     cursor: pointer;
 }
 
-/* ---------- Cart Footer ---------- */
+/* Style cart footer div with top margin, letter spacing, and centered text. */
 .cart-footer {
     margin-top: 2rem;
     letter-spacing: var(--mainSpacing);
     text-align: center;
 }
 
+/* Style subtotal, tax, and total headers by capitalizing words and adding bottom margin. */
 .cart-footer h3 {
     text-transform: capitalize;
     margin-bottom: 1rem;

@@ -1,14 +1,18 @@
-window.smoothScroll = function(target) {
-  var scrollContainer = target;
+/**
+ * Scrolls to target when user clicks on certain button that is associated with this function.
+ * @param {Element} target - the desired location of the page
+ */
+window.scrollDown = function(target) {
+  var scrolldiv = target;
   do { 
-      scrollContainer = scrollContainer.parentNode;
-      if (!scrollContainer) return;
-      scrollContainer.scrollTop += 1;
-  } while (scrollContainer.scrollTop == 0);
+      scrolldiv = scrolldiv.parentNode;
+      if (!scrolldiv) return;
+      scrolldiv.scrollTop += 1;
+  } while (scrolldiv.scrollTop == 0);
 
   var targetY = 0;
   do { 
-      if (target == scrollContainer) break;
+      if (target == scrolldiv) break;
       targetY += target.offsetTop;
   } while (target = target.offsetParent);
 
@@ -17,8 +21,14 @@ window.smoothScroll = function(target) {
       c.scrollTop = a + (b - a) / 30 * i;
       setTimeout(function(){ scroll(c, a, b, i); }, 15);
   }
-  scroll(scrollContainer, scrollContainer.scrollTop, targetY, 0);
+  scroll(scrolldiv, scrolldiv.scrollTop, targetY, 0);
 }
+
+/**
+ * Round number to 2 decimal places
+ * @param {number} num 
+ * @returns {number} num rounded to 2 decimal places
+ */
 function fix(num) {
 if (num > 0)
   return Math.floor(num * 100) / 100;
@@ -26,11 +36,17 @@ else
   return Math.ceil(num * 100) / 100;
 }
 
+/**
+ * Set up contentful client
+ */
 const client = contentful.createClient({
   space: "xt9vmtbix1j4",
   accessToken: "RsEDoFhM4QcMTKVIivC7KyJk_SoVTvmiFow_X88UhQw"
 });
 
+/**
+ * Initialize constant variables 
+ */
 const cartBtn = document.querySelector('.cart-btn');
 const closeCartBtn = document.querySelector(".close-cart");
 const clearCartBtn = document.querySelector(".clear-cart");
@@ -43,9 +59,16 @@ const productsDOM = document.querySelector(".products-center");
 const cartTax = document.getElementById("tax");
 const totalPrice = document.getElementById("totalNtax");
 
+/**
+ * Initialize empty arrays
+ */
 let cart = [];
 let buttonsDOM = [];
 
+/**
+ * Create Product object containing title, price, id, and image. 
+ * Get product data from contentful storage.
+ */
 class Products {
   async getProducts() {
       try {
@@ -66,7 +89,14 @@ class Products {
   }
 }
 
+/**
+ * Display products in products-center div and build cart
+ */
 class UI {
+  /**
+   * Create product div containing all products from Contentful storage
+   * @param {Products} products 
+   */
   displayProducts(products) {
       let result = '';
       products.forEach(product => {
@@ -91,13 +121,16 @@ class UI {
       productsDOM.innerHTML = result;
     }
 
+    /**
+     * Add product to cart when 'Add To Cart' is clicked.
+     * Change 'Add To Cart' text to 'In Cart' when item is added to cart.
+     * Save cart in local storage, set cart values, display cart with new cart item.
+     */
     getBagButtons() {
         const buttons = [...document.querySelectorAll(".bag-btn")];
         buttonsDOM = buttons;
-        //console.log(buttons);
         buttons.forEach(button => {
             let id = button.dataset.id;
-            //console.log(id);
             let inCart = cart.find(item => item.id === id);
             if(inCart) {
                 button.innerHTML = "In Cart";
@@ -106,23 +139,20 @@ class UI {
               button.addEventListener('click', (event)=> {
                   event.target.innerText = "In Cart";
                   event.target.disabled = true;
-                  //get product from products
                   let cartItem = {...Storage.getProduct(id), amount:1};
-                  //console.log(cartItem);
-                  //add product to the cart
                   cart = [...cart,cartItem];
-                  //console.log(cart);
-                  //save cart in local storage
                   Storage.saveCart(cart);
-                  //set cart values
                   this.setCartValues(cart);
-                  //display cart item
                   this.addCartItem(cartItem);
-                  //show the cart
                   this.showCart();
               })
         });
     }
+
+    /**
+     * Calculate subtotal, tax, and total amount when new item is added to cart.
+     * @param {Element} cart 
+     */
     setCartValues(cart) {
         let tempTotal = 0;
         let itemsTotal = 0;
@@ -134,8 +164,12 @@ class UI {
         cartItems.innerText = itemsTotal;
         cartTax.innerText = fix(fix(parseFloat(tempTotal)) * 0.10);
         totalNtax.innerText = fix(fix(parseFloat(tempTotal)) + fix((fix(parseFloat(tempTotal)) * 0.10)));
-        //console.log(cartTotal, cartItems);
     }
+
+    /**
+     * Build cart item div when new item is added to the cart
+     * @param {Element} item 
+     */
     addCartItem(item) {
       const div = document.createElement("div");
       div.classList.add("cart-item");
@@ -151,12 +185,19 @@ class UI {
           <i class="fas fa-chevron-down" data-id=${item.id}></i>
       </div>`;
       cartContent.appendChild(div);
-      //console.log(cartContent);
     }
+
+    /**
+     * Display cart
+     */
     showCart() {
       cartOverlay.classList.add('transparentBcg');
       cartDOM.classList.add("showCart");
     }
+
+    /**
+     * Set up cart when user adds new item of clicks shopping cart at top-right corner.
+     */
     setupAPP() {
       cart = Storage.getCart();
       this.setCartValues(cart);
@@ -164,21 +205,31 @@ class UI {
       cartBtn.addEventListener('click', this.showCart);
       closeCartBtn.addEventListener('click', this.hideCart);
     }
+
+    /**
+     * Populate the cart
+     * @param {Element} cart 
+     */
     populateCart(cart) {
       cart.forEach(item => this.addCartItem(item));
     }
+
+    /**
+     * Hide cart
+     */
     hideCart() {
       cartOverlay.classList.remove('transparentBcg');
       cartDOM.classList.remove("showCart");      
     }
+
+    /**
+     * Set up functionality for clear cart button, up and down arrows to increase/decrease number of items and prices, and remove button.
+     */
     cartLogic() {
-      //clear cart button
       clearCartBtn.addEventListener('click', () => {
         this.clearCart();
       });
-      // cart functionality
       cartContent.addEventListener('click', event => {
-        //console.log(event.target);
         if(event.target.classList.contains('remove-item')) {
           cartContent.removeChild(event.target.parentElement.parentElement);
           this.removeItem(event.target.dataset.id);
@@ -202,14 +253,22 @@ class UI {
         }
       });
     }
+
+    /**
+     * Remove each item when user clicks clear cart button
+     */
     clearCart() {
       let cartItems = cart.map(item => item.id);
       cartItems.forEach(id => this.removeItem(id));
-      //console.log(cartContent.children);
       while(cartContent.children.length > 0) {
         cartContent.removeChild(cartContent.children[0]);
       }
     }
+
+    /**
+     * Remove cart item
+     * @param {*} id 
+     */
     removeItem(id) {
       cart = cart.filter(item => item.id !== id);
       this.setCartValues(cart);
@@ -218,32 +277,60 @@ class UI {
       button.disabled = false;
       button.innerHTML = '<i class="fas fa-shopping-cart"></i>add to cart';
     }
+
+    /**
+     * Get buttom 
+     * @param {Element} id
+     * @returns {Element} button 
+     */
     getSingleButton(id) {
       return buttonsDOM.find(button => button.dataset.id === id);
     }
 }
 
 class Storage {
+  /**
+   * Save products to local storage so data stays the same even when user refreshes the webpage
+   * @param {Products} products 
+   */
   static saveProducts(products) {
       localStorage.setItem("products", JSON.stringify(products));
   }
+
+  /**
+   * Get product from JSON data
+   * @param {Element} id 
+   * @returns {Product} product
+   */
   static getProduct(id) {
       let products = JSON.parse(localStorage.getItem('products'));
       return products.find(product => product.id == id);
   }
+
+  /**
+   * Save cart to local storage
+   * @param {*} cart 
+   */
   static saveCart(cart) {
       localStorage.setItem('cart',JSON.stringify(cart));
   }
+
+  /**
+   * Get cart
+   * @returns JSON array of cart items or empty array
+   */
   static getCart() {
     return localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
   }
 }
 
+/**
+ * When page loads, display products, create cart, save products in local storage, display PayPal buttons and create PayPal order when user clicks
+ * any of the checkout buttons.  
+ */
 document.addEventListener("DOMContentLoaded", ()=> {
-  //get all products
   const ui = new UI();
   const products = new Products();
-  //setup app
   ui.setupAPP();
   products.getProducts().then(products => {
       ui.displayProducts(products);
@@ -265,12 +352,17 @@ createOrder: function(data, actions) {
     });
 },
 
+/**
+ * When user finishes making a purchase, display transaction completed alert message,
+ * reload page, clear cart, and call server to save the transaction. 
+ * @param {*} data 
+ * @param {*} actions 
+ */
 onApprove: function(data, actions) {
     return actions.order.capture().then(function(details) {
         alert('Transaction completed by ' + details.payer.name.given_name + '!');
         const ui = new UI();
         ui.clearCart();
-        //Call server to save the transaction
         return fetch('/paypal-transaction-complete', {
           method: 'post',
           headers: {
